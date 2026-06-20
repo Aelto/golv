@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"golv/golv"
 	"net/http"
-	"strconv"
 )
 
 func FrgCounterRender(value int) string {
@@ -15,7 +14,7 @@ func FrgCounterRender(value int) string {
 			>
 
 				<button hx-post="/Counter/decrease">decrease</button>
-				<input type="number" name="number" value="%d"></input>
+				<input type="number" name="Number" value="%d"></input>
 				<button hx-post="/Counter/increase">increase</button>
 
 			</form>
@@ -24,35 +23,31 @@ func FrgCounterRender(value int) string {
 
 var FrgCounter = golv.NewFragment("Counter", func() []golv.Endpoint {
 	var postIncrease = golv.NewEndpoint("POST /increase", func(w http.ResponseWriter, r *http.Request) {
-		err := r.ParseForm()
+		type Form struct {
+			Number int `form:"Number"`
+		}
+
+		form, err := golv.DeserializeForm[Form](r)
 		if err != nil {
 			fmt.Fprintln(w, "invalid form data")
 			return
 		}
 
-		number, err := strconv.Atoi(r.Form.Get("number"))
-		if err != nil {
-			fmt.Fprintln(w, "provided value is not a number")
-			return
-		}
-
-		fmt.Fprint(w, FrgCounterRender(number+1))
+		fmt.Fprint(w, FrgCounterRender(form.Number+1))
 	})
 
 	var postDecrease = golv.NewEndpoint("POST /decrease", func(w http.ResponseWriter, r *http.Request) {
-		err := r.ParseForm()
+		type Form struct {
+			Number int `form:"Number"`
+		}
+
+		form, err := golv.DeserializeForm[Form](r)
 		if err != nil {
 			fmt.Fprintln(w, "invalid form data")
 			return
 		}
 
-		number, err := strconv.Atoi(r.Form.Get("number"))
-		if err != nil {
-			fmt.Fprintln(w, "provided value is not a number")
-			return
-		}
-
-		fmt.Fprint(w, FrgCounterRender(number-1))
+		fmt.Fprint(w, FrgCounterRender(form.Number-1))
 	})
 
 	return []golv.Endpoint{postIncrease, postDecrease}
