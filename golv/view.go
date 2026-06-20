@@ -1,6 +1,10 @@
 package golv
 
-import _ "embed"
+import (
+	_ "embed"
+
+	"github.com/a-h/templ"
+)
 
 type View struct {
 	Router    Router
@@ -18,22 +22,12 @@ func (view *View) Register() {
 //go:embed htmx.min.js
 var htmx string
 
-func RenderPage() string {
+func RenderPage(child templ.Component) templ.Component {
 	htmxScriptTag := "<script>" + htmx + "</script>"
 
-	return `
-<!doctype html>
-<html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>page title</title>
-  </head>
-  <body>
-  	` + htmxScriptTag + `
+	return renderPage(
+		htmxScriptTag,
+		child,
+	)
 
-    %s
-  </body>
-</html>
-	`
 }

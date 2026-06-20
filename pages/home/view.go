@@ -1,7 +1,7 @@
 package home
 
 import (
-	"fmt"
+	"context"
 	"golv/golv"
 	"golv/pages/home/fragments"
 	"net/http"
@@ -19,6 +19,7 @@ var ViewHome = golv.View{
 var getIndex = golv.NewEndpoint(
 	"GET /",
 	func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, golv.RenderPage(), fragments.FrgCounterRender(0))
+
+		golv.RenderPage(fragments.CounterRender(0)).Render(context.Background(), w)
 	},
 )

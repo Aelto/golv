@@ -1,0 +1,14 @@
+package fragments
+
+templ CounterRender(value int) {
+  <form
+  	hx-target="this"
+  	hx-swap="outerHTML"
+  >
+
+  	<button hx-post="/Counter/decrease">decrease</button>
+  	<input type="number" name="Number" value={value}></input>
+  	<button hx-post="/Counter/increase">increase</button>
+
+  </form>
+}
